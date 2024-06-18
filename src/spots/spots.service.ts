@@ -22,7 +22,7 @@ export class SpotsService {
     return this.prismaService.spot.create({
       data: {
         ...createSpotDto,
-        status: SpotStatus.available,
+        status: SpotStatus.available, // Esse enum o prisma cria para nós por causa do enum que definimos la no schema
       },
     });
   }
