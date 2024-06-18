@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpCode, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -7,26 +7,42 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class EventsService {
 
 constructor(private prismaService: PrismaService) {
-  
+
 }
 
-  create(createEventDto: CreateEventDto) {
-    return 'This action adds a new event';
+  create(createEventDto: CreateEventDto) { // Tem que tipar no DTO para ser possivel de usar as funções do prisma passando os valores direto
+    return this.prismaService.event.create({
+      data: {
+        ...createEventDto,
+        date: new Date(createEventDto.date)
+      } // O Prisma ja sabe quais os campos deste objeto baseado na definição do schema
+    })
   }
 
   findAll() {
-    return `This action returns all events`;
+    return this.prismaService.event.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} event`;
+  findOne(id: string) {
+    return this.prismaService.event.findUnique({
+      where: { id }
+    });
   }
 
-  update(id: number, updateEventDto: UpdateEventDto) {
-    return `This action updates a #${id} event`;
+  update(id: string, updateEventDto: UpdateEventDto) {
+    return this.prismaService.event.update({
+      data: {
+        ...updateEventDto,
+        date: new Date(updateEventDto.date)
+      },
+      where: { id }
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} event`;
+  @HttpCode(204) // Muda o cód retornado na chamada HTTP
+  remove(id: string) {
+    return this.prismaService.event.delete({
+      where: { id }
+    });
   }
 }
