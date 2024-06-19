@@ -7,6 +7,7 @@ export class AuthGuard implements CanActivate {
   constructor(private configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
+    // Aqui é onde fica a lógica para proteger as rotas do controller
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers['x-api-token'];
     return token === this.configService.get('API_TOKEN');

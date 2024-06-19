@@ -48,7 +48,7 @@ export class EventsController {
     return this.eventsService.remove(id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard) // Aqui eu uso a logica de proteção da rota implementada no arquivo auth.guard
   @Post(':id/reserve')
   reserveSpots(
     @Body() reserveRequest: ReserveSpotRequest,
